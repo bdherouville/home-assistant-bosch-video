@@ -39,6 +39,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: BoschVideoConfigEntry) -
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    await coordinator.events.async_start()
     return True
 
 
@@ -46,5 +47,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: BoschVideoConfigEntry) 
     """Unload a Bosch Video config entry."""
     unloaded = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
     if unloaded:
+        await entry.runtime_data.events.async_stop()
         await entry.runtime_data.client.async_close()
     return unloaded

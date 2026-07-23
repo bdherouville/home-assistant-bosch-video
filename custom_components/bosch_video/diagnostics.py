@@ -26,4 +26,5 @@ async def async_get_config_entry_diagnostics(
     return {
         "config_entry": async_redact_data(dict(entry.data), TO_REDACT),
         "camera": entry.runtime_data.client.diagnostics(),
+        "events": entry.runtime_data.events.diagnostics(),
     }

@@ -6,6 +6,7 @@ tested with the FLEXIDOME IP 3000i IR.
 The integration uses:
 
 - ONVIF for discovery, media profiles, snapshots, imaging settings and I/O;
+- ONVIF PullPoint for motion, tamper/image-quality and digital I/O events;
 - RTSP for live video through Home Assistant's `stream` integration;
 - Bosch RCP over HTTP Digest for features not exposed by ONVIF;
 - BICOM over RCP for model-specific lens, day/night and IR controls.
@@ -16,10 +17,20 @@ number, MAC address or Home Assistant deployment data.
 
 ## Current state
 
-This repository is under active development. The first usable milestone
-provides a UI config flow, H.264 camera profiles, snapshots, stream sources,
-device metadata, imaging controls and relay control. Bosch-specific RCP/BICOM
-features are being added behind capability checks.
+This repository is under active development. Version 0.2 provides:
+
+- a UI config flow with Bosch-compatible ONVIF authentication;
+- H.264 camera profiles, snapshots and Home Assistant stream sources;
+- brightness, contrast and color-saturation controls;
+- relay output control;
+- capability-probed day/night and IR controls over Bosch BICOM;
+- ONVIF PullPoint binary sensors for motion, global scene change, image too
+  bright/dark, digital input and relay state;
+- automatic PullPoint renewal, cleanup and reconnection.
+
+The integration deliberately attempts PullPoint even when a Bosch camera
+advertises `WSPullPointSupport = false`. This model reports that capability
+incorrectly while accepting subscriptions.
 
 See the full reverse-engineered protocol description in
 [`docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md`](docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md).
@@ -32,6 +43,11 @@ See the full reverse-engineered protocol description in
 3. Go to **Settings → Devices & services → Add integration**.
 4. Search for **Bosch Video** and enter the camera host, ONVIF port and a Bosch
    account with the required privileges.
+
+The event sensors appear dynamically after the first synchronized PullPoint
+response. They can be used directly as Home Assistant automation triggers. For
+AI object detection, keep Frigate as the source of person/vehicle events and use
+the camera's native motion and tamper sensors as complementary signals.
 
 For the tested firmware, ONVIF uses WS-Security `UsernameToken` with
 `PasswordDigest`. The integration's ONVIF dependency handles this

@@ -9,6 +9,7 @@ DOMAIN = "bosch_video"
 LOGGER = logging.getLogger(__package__)
 
 PLATFORMS: list[Platform] = [
+    Platform.BINARY_SENSOR,
     Platform.CAMERA,
     Platform.NUMBER,
     Platform.SELECT,

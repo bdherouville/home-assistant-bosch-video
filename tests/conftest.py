@@ -43,3 +43,21 @@ def protocol_modules():
         spec.loader.exec_module(module)
         modules[name] = module
     return modules
+
+
+@pytest.fixture(scope="session")
+def event_parser_module():
+    """Load event_parser.py without importing the integration initializer."""
+    path = (
+        Path(__file__).parents[1]
+        / "custom_components"
+        / "bosch_video"
+        / "event_parser.py"
+    )
+    spec = spec_from_file_location("bosch_video_event_parser_test", path)
+    assert spec is not None
+    assert spec.loader is not None
+    module = module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module

@@ -8,6 +8,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .client import BoschCameraClient
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN, LOGGER
+from .events import BoschEventManager
 from .models import BoschCameraState
 
 type BoschVideoConfigEntry = ConfigEntry[BoschVideoCoordinator]
@@ -33,6 +34,15 @@ class BoschVideoCoordinator(DataUpdateCoordinator[BoschCameraState]):
             config_entry=config_entry,
         )
         self.client = client
+        camera_info = client.info
+        if camera_info is None:
+            raise RuntimeError("Camera information is unavailable")
+        self.events = BoschEventManager(
+            hass,
+            client.device,
+            camera_info.unique_id,
+            f"{camera_info.manufacturer} {camera_info.model}",
+        )
 
     async def _async_update_data(self) -> BoschCameraState:
         """Fetch current camera state."""
