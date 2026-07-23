@@ -786,13 +786,28 @@ Objets observés dans `page_lenssettings.js` :
 | Limite proche jour | Camera `4` | `501` | Observé |
 | Limite proche nuit | Camera `4` | `503` | Observé |
 | Correction de focus IR | Camera `4` | `1043` | Observé |
-| Auto-iris | Camera `4` | `432` | Observé |
-| Niveau auto-iris | Camera `4` | `434` | Observé |
+| Commande iris | Camera `4` | `432` | Lecture/écriture vérifiées |
+| Niveau auto-iris | Camera `4` | `434` | Rejeté par ce modèle |
 | Zoom numérique | Camera `4` | `464` | Observé |
 | Vitesse maximale de zoom | PTZ/lens `6` | `289` | Observé |
 | Limite de zoom | PTZ/lens `6` | `297` | Observé |
 
-Ces objets n'ont pas encore été écrits. Avant de créer une entité :
+Les objets focus, zoom et limites ont été sondés en lecture sur le banc. Ce
+modèle les rejette avec `Object ID illégal` ou `Member ID illégal`; aucune
+entité correspondante ne doit donc être créée.
+
+L'objet `4/432` accepte :
+
+| Valeur | Signification |
+|---:|---|
+| `0` | Commande constante |
+| `1` | Commande manuelle |
+
+Cette correspondance provient du JavaScript embarqué `page_lenssettings.js`.
+Un essai réversible `0 → 1 → 0` a confirmé l'écriture, la relecture et la
+restauration de l'état initial.
+
+Avant de créer une autre entité objectif :
 
 1. lire la valeur courante ;
 2. lire `GetMin` et `GetMax` si disponibles ;
@@ -1237,9 +1252,9 @@ Pour chaque commande d'écriture :
 
 ## 23. État de l'implémentation publiée
 
-### 23.1 Version 0.3.0
+### 23.1 Version 0.4.0
 
-La version 0.3.0 implémente et vérifie sur banc :
+La version 0.4.0 implémente et vérifie sur banc :
 
 - les profils H.264, instantanés et URI RTSP ONVIF ;
 - les réglages d'image ONVIF ;
@@ -1254,11 +1269,12 @@ La version 0.3.0 implémente et vérifie sur banc :
   PullPoint ;
 - la lecture du mode et du type d'analyse du module `Viproc` ;
 - l'inventaire Recording/Replay et des compteurs de diagnostic ;
-- les réglages Bosch jour/nuit et infrarouge sondés par BICOM.
+- les réglages Bosch jour/nuit, commande iris et infrarouge sondés par BICOM.
 
-Les essais d'écriture audio ont suivi le cycle valeur initiale, modification,
-relecture et restauration. Le codec, le débit, la fréquence et le niveau de
-sortie ont été restaurés à leurs valeurs initiales.
+Les essais d'écriture audio et iris ont suivi le cycle valeur initiale,
+modification, relecture et restauration. Le codec, le débit, la fréquence, le
+niveau de sortie et la commande iris ont été restaurés à leurs valeurs
+initiales.
 
 ### 23.2 Limite VCA actuelle
 

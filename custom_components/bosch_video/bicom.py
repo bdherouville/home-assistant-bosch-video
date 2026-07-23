@@ -92,7 +92,12 @@ KNOWN_OBJECTS: dict[str, BicomObject] = {
         minimum=0,
         maximum=2,
     ),
-    "auto_iris": BicomObject(BicomServer.CAMERA, 432),
+    "auto_iris": BicomObject(
+        BicomServer.CAMERA,
+        432,
+        minimum=0,
+        maximum=1,
+    ),
     "auto_iris_level": BicomObject(BicomServer.CAMERA, 434),
     "digital_zoom": BicomObject(BicomServer.CAMERA, 464),
     "focus_mode": BicomObject(BicomServer.CAMERA, 496),

@@ -56,6 +56,13 @@
           "monochrome": "Night (monochrome)"
         }
       },
+      "iris_mode": {
+        "name": "Iris control",
+        "state": {
+          "constant": "Constant",
+          "manual": "Manual"
+        }
+      },
       "ir_illuminator": {
         "name": "IR illuminator",
         "state": {

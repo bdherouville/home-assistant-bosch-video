@@ -53,3 +53,12 @@ def test_response_for_another_object_is_rejected(protocol_modules):
 
     with pytest.raises(bicom.BicomProtocolError):
         bicom.decode_bicom_response("85 00 04 01 f0 01 00 01", obj)
+
+
+def test_auto_iris_has_verified_boolean_bounds(protocol_modules):
+    """The iris mode cannot accept a value absent from the Bosch WebGUI."""
+    bicom = protocol_modules["bicom"]
+    obj = bicom.KNOWN_OBJECTS["auto_iris"]
+
+    assert obj.minimum == 0
+    assert obj.maximum == 1

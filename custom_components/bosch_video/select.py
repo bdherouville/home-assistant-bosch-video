@@ -29,6 +29,11 @@ SELECTS = (
         {"automatic": 2, "color": 0, "monochrome": 1},
     ),
     BoschSelectDescription(
+        "auto_iris",
+        "iris_mode",
+        {"constant": 0, "manual": 1},
+    ),
+    BoschSelectDescription(
         "ir_illuminator",
         "ir_illuminator",
         {"off": 0, "on": 1, "automatic": 2},

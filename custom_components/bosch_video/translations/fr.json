@@ -56,6 +56,13 @@
           "monochrome": "Nuit (monochrome)"
         }
       },
+      "iris_mode": {
+        "name": "Commande du diaphragme",
+        "state": {
+          "constant": "Constant",
+          "manual": "Manuel"
+        }
+      },
       "ir_illuminator": {
         "name": "Illuminateur infrarouge",
         "state": {

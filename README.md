@@ -17,13 +17,13 @@ number, MAC address or Home Assistant deployment data.
 
 ## Current state
 
-This repository is under active development. Version 0.3 provides:
+This repository is under active development. Version 0.4 provides:
 
 - a UI config flow with Bosch-compatible ONVIF authentication;
 - H.264 camera profiles, snapshots and Home Assistant stream sources;
 - brightness, contrast and color-saturation controls;
 - relay output control;
-- capability-probed day/night and IR controls over Bosch BICOM;
+- capability-probed day/night, iris and IR controls over Bosch BICOM;
 - capability-constrained audio codec, bitrate and sample-rate controls;
 - a physical audio output level control using the camera-advertised range;
 - ONVIF PullPoint binary sensors for motion, global scene change, image too

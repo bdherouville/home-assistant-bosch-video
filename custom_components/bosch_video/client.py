@@ -314,7 +314,12 @@ class BoschCameraClient:
 
     async def _async_load_bicom(self) -> None:
         """Probe the small, model-specific BICOM capability allowlist."""
-        for key in ("day_night_mode", "ir_illuminator", "ir_intensity"):
+        for key in (
+            "day_night_mode",
+            "auto_iris",
+            "ir_illuminator",
+            "ir_intensity",
+        ):
             obj = KNOWN_OBJECTS[key]
             try:
                 response = await self.bicom.async_get(obj)
