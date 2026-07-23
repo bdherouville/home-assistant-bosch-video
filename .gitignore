@@ -1,0 +1,39 @@
+# Local credentials and Home Assistant secrets
+env.txt
+.env
+.env.*
+secrets.yaml
+
+# Private lab material
+.private/
+tmp/
+*.pcap
+*.har
+*.network-request
+*.network-response
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Home Assistant runtime
+.storage/
+home-assistant.log*
+home-assistant_v2.db*
+deps/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

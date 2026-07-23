@@ -1,0 +1,79 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "This camera is already configured."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to the camera.",
+      "invalid_auth": "The username or password is invalid.",
+      "onvif_error": "The camera returned an ONVIF protocol error."
+    },
+    "step": {
+      "reauth_confirm": {
+        "data": {
+          "password": "Password",
+          "username": "Username"
+        },
+        "description": "Update the credentials for this Bosch camera.",
+        "title": "Reauthenticate"
+      },
+      "user": {
+        "data": {
+          "host": "Host",
+          "password": "Password",
+          "port": "ONVIF HTTP port",
+          "username": "Username"
+        },
+        "description": "Connect directly to a Bosch IP camera using ONVIF.",
+        "title": "Add Bosch camera"
+      }
+    }
+  },
+  "entity": {
+    "number": {
+      "brightness": {
+        "name": "Brightness"
+      },
+      "color_saturation": {
+        "name": "Color saturation"
+      },
+      "contrast": {
+        "name": "Contrast"
+      },
+      "ir_intensity": {
+        "name": "IR intensity"
+      }
+    },
+    "select": {
+      "day_night_mode": {
+        "name": "Day/night mode",
+        "state": {
+          "automatic": "Automatic",
+          "color": "Day (color)",
+          "monochrome": "Night (monochrome)"
+        }
+      },
+      "ir_illuminator": {
+        "name": "IR illuminator",
+        "state": {
+          "automatic": "Automatic",
+          "off": "Off",
+          "on": "On"
+        }
+      }
+    },
+    "sensor": {
+      "media_profiles": {
+        "name": "Media profiles"
+      },
+      "onvif_services": {
+        "name": "ONVIF services"
+      }
+    },
+    "switch": {
+      "relay": {
+        "name": "Relay {token}"
+      }
+    }
+  }
+}

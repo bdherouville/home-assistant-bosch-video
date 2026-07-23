@@ -1,0 +1,18 @@
+{
+  "domain": "bosch_video",
+  "name": "Bosch Video",
+  "codeowners": ["@bdherouville"],
+  "config_flow": true,
+  "dependencies": ["ffmpeg"],
+  "documentation": "https://github.com/bdherouville/home-assistant-bosch-video",
+  "integration_type": "device",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/bdherouville/home-assistant-bosch-video/issues",
+  "loggers": ["onvif", "wsdiscovery", "zeep"],
+  "requirements": [
+    "onvif-zeep-async==4.2.1",
+    "onvif_parsers==2.3.0",
+    "WSDiscovery==2.1.2"
+  ],
+  "version": "0.1.0"
+}
