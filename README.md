@@ -71,10 +71,18 @@ automatically.
 
 ## HACS installation
 
-Until this repository is listed in the default HACS catalog, add
-`https://github.com/bdherouville/home-assistant-bosch-video` as a custom
-**Integration** repository in HACS, install **Bosch Video**, restart Home
-Assistant, then add one Bosch Video entry per physical camera.
+Until this repository is listed in the default HACS catalog:
+
+1. Open **HACS**, then **Custom repositories** from the top-right menu.
+2. Add
+   `https://github.com/bdherouville/home-assistant-bosch-video`
+   with the **Integration** category.
+3. Install **Bosch Video** and restart Home Assistant.
+4. Go to **Settings > Devices & services > Add integration**, search for
+   **Bosch Video**, then add one entry per physical camera.
+
+The complete French procedure, including updates and troubleshooting, is in
+[`docs/INSTALLATION_HACS.md`](docs/INSTALLATION_HACS.md).
 
 ## Security
 
