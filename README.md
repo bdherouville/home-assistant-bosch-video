@@ -17,20 +17,30 @@ number, MAC address or Home Assistant deployment data.
 
 ## Current state
 
-This repository is under active development. Version 0.2 provides:
+This repository is under active development. Version 0.3 provides:
 
 - a UI config flow with Bosch-compatible ONVIF authentication;
 - H.264 camera profiles, snapshots and Home Assistant stream sources;
 - brightness, contrast and color-saturation controls;
 - relay output control;
 - capability-probed day/night and IR controls over Bosch BICOM;
+- capability-constrained audio codec, bitrate and sample-rate controls;
+- a physical audio output level control using the camera-advertised range;
 - ONVIF PullPoint binary sensors for motion, global scene change, image too
   bright/dark, digital input and relay state;
-- automatic PullPoint renewal, cleanup and reconnection.
+- automatic PullPoint renewal, cleanup and reconnection;
+- read-only active video-analytics mode/type sensors;
+- disabled-by-default recording and recording-job diagnostic counters.
 
 The integration deliberately attempts PullPoint even when a Bosch camera
 advertises `WSPullPointSupport = false`. This model reports that capability
 incorrectly while accepting subscriptions.
+
+Recording and replay services are capability-probed. Cameras with no ONVIF
+recording objects do not receive playback controls; Frigate remains the
+recommended recorder in that case. Video-analytics mode is currently read-only
+because this firmware does not advertise the allowed SOAP values needed for
+safe writes.
 
 See the full reverse-engineered protocol description in
 [`docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md`](docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md).

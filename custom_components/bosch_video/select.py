@@ -10,6 +10,7 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import BoschVideoConfigEntry, BoschVideoCoordinator
 from .entity import BoschVideoEntity
+from .models import BoschAudioEncoder
 
 
 @dataclass(slots=True, frozen=True)
@@ -43,9 +44,21 @@ async def async_setup_entry(
     """Set up supported Bosch selects."""
     coordinator = entry.runtime_data
     async_add_entities(
-        BoschBicomSelect(coordinator, description)
-        for description in SELECTS
-        if description.key in coordinator.client.bicom_objects
+        [
+            *(
+                BoschBicomSelect(coordinator, description)
+                for description in SELECTS
+                if description.key in coordinator.client.bicom_objects
+            ),
+            *(
+                BoschAudioEncoderSelect(coordinator, encoder, setting, index)
+                for index, encoder in enumerate(
+                    coordinator.client.audio_encoders,
+                    start=1,
+                )
+                for setting in ("encoding", "bitrate", "sample_rate")
+            ),
+        ]
     )
 
 
@@ -83,5 +96,61 @@ class BoschBicomSelect(BoschVideoEntity, SelectEntity):
         await self.coordinator.client.async_set_bicom(
             self.description.key,
             self.description.values[option],
+        )
+        await self.coordinator.async_request_refresh()
+
+
+class BoschAudioEncoderSelect(BoschVideoEntity, SelectEntity):
+    """A capability-constrained ONVIF audio encoder field."""
+
+    def __init__(
+        self,
+        coordinator: BoschVideoCoordinator,
+        encoder: BoschAudioEncoder,
+        setting: str,
+        index: int,
+    ) -> None:
+        """Initialize an audio encoder select."""
+        super().__init__(coordinator)
+        self.encoder = encoder
+        self.setting = setting
+        camera_id = coordinator.client.info.unique_id
+        self._attr_unique_id = (
+            f"{camera_id}#audio_encoder#{encoder.token}#{setting}"
+        )
+        self._attr_translation_key = f"audio_{setting}"
+        self._attr_translation_placeholders = {"index": str(index)}
+
+    @property
+    def options(self) -> list[str]:
+        """Return choices valid for the current codec."""
+        if self.setting == "encoding":
+            return list(self.encoder.options)
+        current_encoding = self.coordinator.data.audio_encoders.get(
+            self.encoder.token, {}
+        ).get("encoding")
+        codec_options = self.encoder.options.get(current_encoding)
+        if codec_options is None:
+            return []
+        values = (
+            codec_options.bitrates
+            if self.setting == "bitrate"
+            else codec_options.sample_rates
+        )
+        return [str(value) for value in values]
+
+    @property
+    def current_option(self) -> str | None:
+        """Return the current encoder value."""
+        state = self.coordinator.data.audio_encoders.get(self.encoder.token, {})
+        value = state.get(self.setting)
+        return str(value) if value not in (None, "") else None
+
+    async def async_select_option(self, option: str) -> None:
+        """Set and refresh one encoder field."""
+        await self.coordinator.client.async_set_audio_encoder(
+            self.encoder.token,
+            self.setting,
+            option,
         )
         await self.coordinator.async_request_refresh()

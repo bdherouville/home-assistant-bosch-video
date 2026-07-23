@@ -61,3 +61,27 @@ def event_parser_module():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+@pytest.fixture(scope="session")
+def audio_modules():
+    """Load pure audio validation code without Home Assistant."""
+    source = Path(__file__).parents[1] / "custom_components" / "bosch_video"
+    package_name = "bosch_video_audio_test"
+    package = ModuleType(package_name)
+    package.__path__ = [str(source)]
+    sys.modules[package_name] = package
+
+    modules = {}
+    for name in ("models", "audio"):
+        spec = spec_from_file_location(
+            f"{package_name}.{name}",
+            source / f"{name}.py",
+        )
+        assert spec is not None
+        assert spec.loader is not None
+        module = module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        modules[name] = module
+    return modules

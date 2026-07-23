@@ -1235,7 +1235,49 @@ Pour chaque commande d'écriture :
 - sauvegarde/restauration ;
 - tests matériels.
 
-## 23. Limites et inconnues
+## 23. État de l'implémentation publiée
+
+### 23.1 Version 0.3.0
+
+La version 0.3.0 implémente et vérifie sur banc :
+
+- les profils H.264, instantanés et URI RTSP ONVIF ;
+- les réglages d'image ONVIF ;
+- le relais DeviceIO et son événement PullPoint ;
+- l'entrée numérique sous forme de capteur binaire PullPoint ;
+- le codec, le débit et la fréquence d'échantillonnage audio, contraints par
+  `GetAudioEncoderConfigurationOptions` ;
+- le niveau de sortie audio, borné par
+  `GetAudioOutputConfigurationOptions` ;
+- les événements Bosch de mouvement et qualité d'image ;
+- la reconnexion, le renouvellement et la suppression des souscriptions
+  PullPoint ;
+- la lecture du mode et du type d'analyse du module `Viproc` ;
+- l'inventaire Recording/Replay et des compteurs de diagnostic ;
+- les réglages Bosch jour/nuit et infrarouge sondés par BICOM.
+
+Les essais d'écriture audio ont suivi le cycle valeur initiale, modification,
+relecture et restauration. Le codec, le débit, la fréquence et le niveau de
+sortie ont été restaurés à leurs valeurs initiales.
+
+### 23.2 Limite VCA actuelle
+
+Le module Analytics expose les paramètres `Mode` et `AnalysisType`, mais sa
+description ONVIF ne publie que leur type `xs:string`, sans énumération des
+valeurs autorisées. Le manuel présente six modes dans l'interface :
+
+- désactivé ;
+- VCA silencieux ;
+- profil 1 ;
+- profil 2 ;
+- planifié ;
+- événement déclenché.
+
+Tant que la correspondance exacte entre ces libellés et les chaînes SOAP
+Bosch n'est pas vérifiée avec rollback, l'intégration expose ces paramètres en
+lecture seule.
+
+## 24. Limites et inconnues
 
 - Media2 est annoncé mais n'a pas encore été exercé.
 - Le talkback audio n'a pas encore été validé.
@@ -1248,7 +1290,7 @@ Pour chaque commande d'écriture :
 - Le SKU matériel exact doit être lu séparément si une différence 2 MP/5 MP
   influe sur les capacités.
 
-## 24. Sources
+## 25. Sources
 
 ### Bosch
 

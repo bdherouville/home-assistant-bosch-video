@@ -51,9 +51,47 @@ class BoschRelay:
     idle_state: str | None
 
 
+@dataclass(slots=True, frozen=True)
+class BoschAudioEncoderOption:
+    """Valid bitrate and sample-rate combinations for one codec."""
+
+    encoding: str
+    bitrates: tuple[int, ...]
+    sample_rates: tuple[int, ...]
+
+
+@dataclass(slots=True, frozen=True)
+class BoschAudioEncoder:
+    """One writable ONVIF audio encoder configuration."""
+
+    token: str
+    options: dict[str, BoschAudioEncoderOption]
+
+
+@dataclass(slots=True, frozen=True)
+class BoschAudioOutput:
+    """One writable physical audio output."""
+
+    configuration_token: str
+    output_token: str
+    minimum: int
+    maximum: int
+
+
+@dataclass(slots=True, frozen=True)
+class BoschAnalyticsParameter:
+    """One readable parameter from an active ONVIF analytics module."""
+
+    key: str
+    name: str
+
+
 @dataclass(slots=True)
 class BoschCameraState:
     """Mutable coordinator state."""
 
     imaging: dict[str, float] = field(default_factory=dict)
     rcp: dict[str, Any] = field(default_factory=dict)
+    audio_encoders: dict[str, dict[str, str | int]] = field(default_factory=dict)
+    audio_output_levels: dict[str, int] = field(default_factory=dict)
+    analytics: dict[str, str] = field(default_factory=dict)

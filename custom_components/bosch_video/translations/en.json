@@ -42,6 +42,9 @@
       },
       "ir_intensity": {
         "name": "IR intensity"
+      },
+      "audio_output_level": {
+        "name": "Audio output {index} level"
       }
     },
     "select": {
@@ -60,6 +63,15 @@
           "off": "Off",
           "on": "On"
         }
+      },
+      "audio_encoding": {
+        "name": "Audio encoder {index} codec"
+      },
+      "audio_bitrate": {
+        "name": "Audio encoder {index} bitrate"
+      },
+      "audio_sample_rate": {
+        "name": "Audio encoder {index} sample rate"
       }
     },
     "sensor": {
@@ -68,6 +80,18 @@
       },
       "onvif_services": {
         "name": "ONVIF services"
+      },
+      "recordings": {
+        "name": "Recordings"
+      },
+      "recording_jobs": {
+        "name": "Recording jobs"
+      },
+      "analytics_mode": {
+        "name": "Video analytics {index} mode"
+      },
+      "analytics_type": {
+        "name": "Video analytics {index} type"
       }
     },
     "switch": {
