@@ -6,7 +6,8 @@
     "error": {
       "cannot_connect": "Failed to connect to the camera.",
       "invalid_auth": "The username or password is invalid.",
-      "onvif_error": "The camera returned an ONVIF protocol error."
+      "onvif_error": "The camera returned an ONVIF protocol error.",
+      "wrong_camera": "The address or credentials belong to another camera."
     },
     "step": {
       "reauth_confirm": {
@@ -16,6 +17,14 @@
         },
         "description": "Update the credentials for this Bosch camera.",
         "title": "Reauthenticate"
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Host",
+          "port": "ONVIF HTTP port"
+        },
+        "description": "Change the connection address. The camera identity must remain the same.",
+        "title": "Reconfigure Bosch camera"
       },
       "user": {
         "data": {

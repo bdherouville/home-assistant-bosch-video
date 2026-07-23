@@ -1,0 +1,72 @@
+# Generic Home Assistant package example.
+# Replace every "replace_with_*" placeholder in Home Assistant.
+# No bot token, chat ID, camera address, or deployment-specific entity is stored here.
+
+automation:
+  - id: bosch_frigate_person_snapshot_when_armed
+    alias: "Bosch/Frigate - person snapshot while armed away"
+    mode: parallel
+    max: 10
+    triggers:
+      - trigger: mqtt
+        topic: frigate/events
+    conditions:
+      - condition: state
+        entity_id: alarm_control_panel.replace_with_alarm_panel
+        state: armed_away
+      - condition: template
+        value_template: >-
+          {{
+            trigger.payload_json["after"]["camera"]
+              == "replace_with_frigate_camera_name"
+            and trigger.payload_json["after"]["label"] == "person"
+            and trigger.payload_json["after"]["has_snapshot"]
+            and not trigger.payload_json["before"]["has_snapshot"]
+          }}
+    actions:
+      - action: telegram_bot.send_photo
+        data:
+          entity_id: notify.replace_with_telegram_notifier
+          url: >-
+            http://homeassistant.local:8123/api/frigate/notifications/{{
+              trigger.payload_json["after"]["id"]
+            }}/snapshot.jpg
+          caption: >-
+            Person detected by {{
+              trigger.payload_json["after"]["camera"]
+            }} while the alarm was armed away.
+          parse_mode: plain_text
+
+  - id: bosch_frigate_person_clip_when_armed
+    alias: "Bosch/Frigate - person clip while armed away"
+    mode: parallel
+    max: 10
+    triggers:
+      - trigger: mqtt
+        topic: frigate/events
+    conditions:
+      - condition: state
+        entity_id: alarm_control_panel.replace_with_alarm_panel
+        state: armed_away
+      - condition: template
+        value_template: >-
+          {{
+            trigger.payload_json["type"] == "end"
+            and trigger.payload_json["after"]["camera"]
+              == "replace_with_frigate_camera_name"
+            and trigger.payload_json["after"]["label"] == "person"
+            and trigger.payload_json["after"]["has_clip"]
+          }}
+    actions:
+      - action: telegram_bot.send_video
+        data:
+          entity_id: notify.replace_with_telegram_notifier
+          url: >-
+            http://homeassistant.local:8123/api/frigate/notifications/{{
+              trigger.payload_json["after"]["id"]
+            }}/clip.mp4
+          caption: >-
+            Completed person event from {{
+              trigger.payload_json["after"]["camera"]
+            }}.
+          parse_mode: plain_text

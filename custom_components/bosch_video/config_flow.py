@@ -38,7 +38,17 @@ class BoschVideoConfigFlow(ConfigFlow, domain=DOMAIN):
                 await client.async_initialize()
                 if client.info is None:
                     raise ValueError("Missing device information")
-                await self.async_set_unique_id(client.info.unique_id)
+                existing = next(
+                    (
+                        entry
+                        for entry in self._async_current_entries()
+                        if client.info.matches_unique_id(entry.unique_id)
+                    ),
+                    None,
+                )
+                await self.async_set_unique_id(
+                    existing.unique_id if existing else client.info.unique_id
+                )
                 self._abort_if_unique_id_configured(
                     updates={
                         CONF_HOST: user_input[CONF_HOST],
@@ -106,6 +116,16 @@ class BoschVideoConfigFlow(ConfigFlow, domain=DOMAIN):
             )
             try:
                 await client.async_initialize()
+                if (
+                    client.info is None
+                    or not client.info.matches_unique_id(entry.unique_id)
+                ):
+                    errors["base"] = "wrong_camera"
+                    return self.async_show_form(
+                        step_id="reauth_confirm",
+                        data_schema=self._reauth_schema(entry, user_input),
+                        errors=errors,
+                    )
             except (Fault, TransportError, ONVIFError, TimeoutError, OSError):
                 errors["base"] = "invalid_auth"
             else:
@@ -115,13 +135,82 @@ class BoschVideoConfigFlow(ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="reauth_confirm",
+            data_schema=self._reauth_schema(entry, user_input),
+            errors=errors,
+        )
+
+    def _reauth_schema(
+        self,
+        entry: Any,
+        user_input: dict[str, Any] | None,
+    ) -> vol.Schema:
+        """Return the credential form without ever pre-filling a password."""
+        return vol.Schema(
+            {
+                vol.Required(
+                    CONF_USERNAME,
+                    default=(user_input or entry.data).get(CONF_USERNAME, "service"),
+                ): str,
+                vol.Required(CONF_PASSWORD): str,
+            }
+        )
+
+    async def async_step_reconfigure(
+        self,
+        user_input: dict[str, Any] | None = None,
+    ) -> ConfigFlowResult:
+        """Update the Home Assistant connection address for the same camera."""
+        entry = self._get_reconfigure_entry()
+        errors: dict[str, str] = {}
+        if user_input is not None:
+            data = dict(entry.data)
+            data.update(user_input)
+            client = BoschCameraClient(
+                data[CONF_HOST],
+                data[CONF_PORT],
+                data[CONF_USERNAME],
+                data[CONF_PASSWORD],
+                async_get_clientsession(self.hass),
+            )
+            try:
+                await client.async_initialize()
+                if (
+                    client.info is None
+                    or not client.info.matches_unique_id(entry.unique_id)
+                ):
+                    errors["base"] = "wrong_camera"
+                else:
+                    return self.async_update_reload_and_abort(entry, data=data)
+            except Fault as err:
+                errors["base"] = (
+                    "invalid_auth" if is_auth_error(err) else "onvif_error"
+                )
+            except TransportError as err:
+                errors["base"] = (
+                    "invalid_auth"
+                    if err.status_code in (401, 403)
+                    else "cannot_connect"
+                )
+            except (TimeoutError, OSError, ONVIFError, ValueError):
+                errors["base"] = "cannot_connect"
+            finally:
+                await client.async_close()
+
+        return self.async_show_form(
+            step_id="reconfigure",
             data_schema=vol.Schema(
                 {
                     vol.Required(
-                        CONF_USERNAME,
-                        default=entry.data[CONF_USERNAME],
+                        CONF_HOST,
+                        default=(user_input or entry.data).get(CONF_HOST, ""),
                     ): str,
-                    vol.Required(CONF_PASSWORD): str,
+                    vol.Required(
+                        CONF_PORT,
+                        default=(user_input or entry.data).get(
+                            CONF_PORT,
+                            DEFAULT_PORT,
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                 }
             ),
             errors=errors,

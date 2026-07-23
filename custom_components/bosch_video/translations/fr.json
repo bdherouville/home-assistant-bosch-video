@@ -6,7 +6,8 @@
     "error": {
       "cannot_connect": "Impossible de se connecter à la caméra.",
       "invalid_auth": "Le nom d'utilisateur ou le mot de passe est incorrect.",
-      "onvif_error": "La caméra a renvoyé une erreur de protocole ONVIF."
+      "onvif_error": "La caméra a renvoyé une erreur de protocole ONVIF.",
+      "wrong_camera": "L'adresse ou les identifiants correspondent à une autre caméra."
     },
     "step": {
       "reauth_confirm": {
@@ -16,6 +17,14 @@
         },
         "description": "Mettez à jour les identifiants de cette caméra Bosch.",
         "title": "Réauthentification"
+      },
+      "reconfigure": {
+        "data": {
+          "host": "Hôte",
+          "port": "Port HTTP ONVIF"
+        },
+        "description": "Modifiez l'adresse de connexion. L'identité de la caméra doit rester la même.",
+        "title": "Reconfigurer la caméra Bosch"
       },
       "user": {
         "data": {

@@ -19,6 +19,16 @@ class BoschDeviceInfo:
         """Return the best available stable identifier."""
         return self.mac_address or self.serial_number
 
+    def matches_unique_id(self, candidate: str | None) -> bool:
+        """Match a config ID against either stable identifier."""
+        if not candidate:
+            return False
+        normalized = candidate.casefold()
+        return any(
+            value and value.casefold() == normalized
+            for value in (self.mac_address, self.serial_number)
+        )
+
 
 @dataclass(slots=True, frozen=True)
 class BoschMediaProfile:

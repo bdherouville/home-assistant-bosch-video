@@ -1252,9 +1252,9 @@ Pour chaque commande d'écriture :
 
 ## 23. État de l'implémentation publiée
 
-### 23.1 Version 0.4.0
+### 23.1 Version 0.5.0
 
-La version 0.4.0 implémente et vérifie sur banc :
+La version 0.5.0 implémente et vérifie sur banc :
 
 - les profils H.264, instantanés et URI RTSP ONVIF ;
 - les réglages d'image ONVIF ;
@@ -1269,7 +1269,13 @@ La version 0.4.0 implémente et vérifie sur banc :
   PullPoint ;
 - la lecture du mode et du type d'analyse du module `Viproc` ;
 - l'inventaire Recording/Replay et des compteurs de diagnostic ;
-- les réglages Bosch jour/nuit, commande iris et infrarouge sondés par BICOM.
+- les réglages Bosch jour/nuit, commande iris et infrarouge sondés par BICOM ;
+- l'isolation des identifiants d'entités entre plusieurs caméras ;
+- la reconnaissance d'une même caméra par numéro de série ou adresse MAC ;
+- la reconfiguration de l'hôte/port Home Assistant avec refus d'une autre
+  identité physique ;
+- un exemple générique Frigate/Telegram conditionné par un véritable
+  `alarm_control_panel` à l'état `armed_away`.
 
 Les essais d'écriture audio et iris ont suivi le cycle valeur initiale,
 modification, relecture et restauration. Le codec, le débit, la fréquence, le

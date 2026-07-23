@@ -17,7 +17,7 @@ number, MAC address or Home Assistant deployment data.
 
 ## Current state
 
-This repository is under active development. Version 0.4 provides:
+This repository is under active development. Version 0.5 provides:
 
 - a UI config flow with Bosch-compatible ONVIF authentication;
 - H.264 camera profiles, snapshots and Home Assistant stream sources;
@@ -30,7 +30,10 @@ This repository is under active development. Version 0.4 provides:
   bright/dark, digital input and relay state;
 - automatic PullPoint renewal, cleanup and reconnection;
 - read-only active video-analytics mode/type sensors;
-- disabled-by-default recording and recording-job diagnostic counters.
+- disabled-by-default recording and recording-job diagnostic counters;
+- multi-camera-safe entity IDs and identity validation during reauthentication;
+- a Reconfigure flow that updates only Home Assistant's host/port settings and
+  refuses a different physical camera.
 
 The integration deliberately attempts PullPoint even when a Bosch camera
 advertises `WSPullPointSupport = false`. This model reports that capability
@@ -44,6 +47,9 @@ safe writes.
 
 See the full reverse-engineered protocol description in
 [`docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md`](docs/BOSCH_FLEXIDOME_IP_3000I_PROTOCOL_SPEC.md).
+For deployment patterns, multi-camera behavior and the generic
+alarm-panel/Frigate/Telegram example, see
+[`docs/HOME_ASSISTANT_FRIGATE.md`](docs/HOME_ASSISTANT_FRIGATE.md).
 
 ## Development installation
 
@@ -62,6 +68,13 @@ the camera's native motion and tamper sensors as complementary signals.
 For the tested firmware, ONVIF uses WS-Security `UsernameToken` with
 `PasswordDigest`. The integration's ONVIF dependency handles this
 automatically.
+
+## HACS installation
+
+Until this repository is listed in the default HACS catalog, add
+`https://github.com/bdherouville/home-assistant-bosch-video` as a custom
+**Integration** repository in HACS, install **Bosch Video**, restart Home
+Assistant, then add one Bosch Video entry per physical camera.
 
 ## Security
 

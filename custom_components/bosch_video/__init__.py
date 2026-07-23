@@ -36,10 +36,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: BoschVideoConfigEntry) -
         raise ConfigEntryNotReady(f"Unable to connect to the camera: {err}") from err
 
     coordinator = BoschVideoCoordinator(hass, entry, client)
-    await coordinator.async_config_entry_first_refresh()
-    entry.runtime_data = coordinator
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-    await coordinator.events.async_start()
+    try:
+        await coordinator.async_config_entry_first_refresh()
+        entry.runtime_data = coordinator
+        await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+        await coordinator.events.async_start()
+    except Exception:
+        await coordinator.events.async_stop()
+        await client.async_close()
+        raise
     return True
 
 

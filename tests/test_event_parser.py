@@ -82,3 +82,21 @@ def test_unknown_topic_is_ignored(event_parser_module: ModuleType) -> None:
         asyncio.run(event_parser_module.async_parse_event("camera-id", message))
         == []
     )
+
+
+def test_identical_sources_on_two_cameras_have_distinct_ids(
+    event_parser_module: ModuleType,
+) -> None:
+    """Multi-camera event entities cannot collide in the registry."""
+    message = _message(
+        "tns1:VideoSource/MotionAlarm",
+        "Source",
+        "same-source-token",
+        "State",
+        "true",
+    )
+
+    first = asyncio.run(event_parser_module.async_parse_event("camera-a", message))
+    second = asyncio.run(event_parser_module.async_parse_event("camera-b", message))
+
+    assert first[0].uid != second[0].uid
